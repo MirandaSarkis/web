@@ -74,6 +74,18 @@ El texto de la muestra, en párrafos.
 Las líneas `Clave: valor` que pongas arriba (Curaduría, Texto, Registro…) aparecen en la ficha
 de la muestra en el mismo orden.
 
+### Videos de una muestra
+
+Poné el video en la carpeta de la muestra con el nombre `video.mp4`. Si querés elegir la imagen
+que se ve antes de darle play, agregá una foto con el mismo nombre: `video.jpg`.
+
+- Si hay más de uno, nombralos `video.mp4`, `video entrevista.mp4`, etc. Lo que va después de
+  "video" aparece como epígrafe ("Entrevista").
+- Tienen que pesar menos de 25 MB para subirlos desde la página de GitHub (y nunca más de 100 MB).
+  Para videos más largos, subilos a YouTube o Vimeo y agregá en la ficha una línea
+  `Video: https://vimeo.com/...`.
+- Mejor en formato .mp4: los .mov pueden no verse en todos los navegadores.
+
 ## Prensa, CV y contacto
 
 - `prensa/prensa.txt`: una nota por bloque, separadas por una línea en blanco

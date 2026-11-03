@@ -27,6 +27,7 @@ SALIDA = RAIZ / "_site"
 FOTO_MAX = 2000      # lado mayor de las fotos grandes
 MINI_MAX = 900       # lado mayor de las miniaturas de la grilla de obras
 EXT_FOTO = {".jpg", ".jpeg", ".png", ".tif", ".tiff", ".webp"}
+EXT_VIDEO = {".mp4", ".webm", ".mov", ".m4v"}
 
 avisos = []
 
@@ -86,7 +87,7 @@ CLAVES = {
     "formato": "formato", "lugar": "lugar",
     "subtitulo": "subtitulo", "subtítulo": "subtitulo",
     "epigrafe": "epigrafe", "epígrafe": "epigrafe",
-    "firma": "firma", "pie de foto": "pie", "pie": "pie",
+    "firma": "firma", "pie de foto": "pie", "pie": "pie", "video": "video",
 }
 
 
@@ -139,9 +140,36 @@ def medidas(m):
     return m
 
 
+def videos_de(carpeta):
+    vs = [p for p in carpeta.iterdir() if p.is_file() and p.suffix.lower() in EXT_VIDEO and not p.name.startswith(".")]
+    return sorted(vs, key=lambda p: orden_natural(p.stem))
+
+
 def fotos_de(carpeta):
-    fs = [p for p in carpeta.iterdir() if p.is_file() and p.suffix.lower() in EXT_FOTO and not p.name.startswith(".")]
+    """Fotos de la carpeta, sin contar las portadas de video (una imagen con el mismo nombre que un video)."""
+    portadas = {nfc(v.stem).lower() for v in videos_de(carpeta)}
+    fs = [p for p in carpeta.iterdir() if p.is_file() and p.suffix.lower() in EXT_FOTO and not p.name.startswith(".")
+          and nfc(p.stem).lower() not in portadas]
     return sorted(fs, key=lambda p: orden_natural(p.stem))
+
+
+def guardar_videos(carpeta, destino):
+    """Copia los videos de una carpeta a _site. Devuelve [ruta, portada, ancho, alto, epígrafe]."""
+    lista = []
+    for i, v in enumerate(videos_de(carpeta)):
+        mb = v.stat().st_size / 1e6
+        if mb > 95:
+            aviso(f"El video {v.relative_to(RAIZ)} pesa {mb:.0f} MB: GitHub no acepta archivos de más de 100 MB")
+        if v.suffix.lower() == ".mov":
+            aviso(f"El video {v.relative_to(RAIZ)} es .mov: puede no verse en todos los navegadores (mejor .mp4)")
+        rel = f"video/{destino}/{i + 1}{v.suffix.lower()}"
+        (SALIDA / rel).parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy(v, SALIDA / rel)
+        portada = next((p for p in carpeta.iterdir() if p.suffix.lower() in EXT_FOTO and nfc(p.stem).lower() == nfc(v.stem).lower()), None)
+        pr = guardar_foto(portada, f"video/{destino}/{i + 1}.jpg", 1600) if portada else None
+        epigrafe = re.sub(r"^\s*(video|registro)\b[\s._-]*", "", sin_numero(v.stem), flags=re.I).strip()
+        lista.append([rel, pr[0] if pr else None, pr[1] if pr else 16, pr[2] if pr else 9, epigrafe[:1].upper() + epigrafe[1:]])
+    return lista
 
 
 def guardar_foto(src, destino_rel, maximo=FOTO_MAX, mini=False):
@@ -195,7 +223,7 @@ def leer_muestras():
         titulo = campos.get("titulo") or sin_numero(carpeta.name)
         anio = campos.get("anio") or (re.match(r"^\s*(\d{4})", carpeta.name) or [None, ""])[1]
         mid = slug(titulo)
-        especiales = {"titulo", "anio", "lugar", "subtitulo", "epigrafe", "firma"}
+        especiales = {"titulo", "anio", "lugar", "subtitulo", "epigrafe", "firma", "video"}
         ficha = [[k, v] for k, v in filas if CLAVES.get(k.lower()) not in especiales and v]
         m = {"id": mid, "titulo": titulo, "anio": anio, "lugar": campos.get("lugar", ""), "ficha": ficha}
         if campos.get("subtitulo"):
@@ -211,6 +239,9 @@ def leer_muestras():
             m["texto"] = parrafos
         else:
             m["texto"] = None
+        m["videos"] = guardar_videos(carpeta, mid)
+        if campos.get("video", "").startswith("http"):
+            m["embed"] = campos["video"]
         lista = []
         for i, f in enumerate(fotos_de(carpeta)):
             r = guardar_foto(f, f"img/muestras/{mid}/{i + 1}.jpg")

@@ -192,6 +192,14 @@ h1.ti{ font-weight:400; font-style:italic; }
 .gal a{ text-underline-offset:3px; text-decoration-thickness:1px; }
 @media (max-width:900px){ .works{ grid-template-columns:repeat(2, minmax(0,1fr)); } .works-g{ grid-template-columns:repeat(2, minmax(0,1fr)); } }
 
+/* Videos */
+.videos{ display:flex; flex-direction:column; gap:20px; }
+.video{ margin:0; display:flex; flex-direction:column; gap:8px; }
+.video video{ display:block; width:100%; height:auto; max-width:100%; background:#000; }
+.video.vertical{ align-items:center; }
+.video.vertical video{ width:auto; max-height:80vh; }
+.video.embed iframe{ width:100%; aspect-ratio:16 / 9; border:0; background:#000; }
+
 footer{
   margin-top:auto; padding-top:20px; border-top:1px solid var(--line);
   display:flex; flex-wrap:wrap; justify-content:space-between; gap:8px 24px;
@@ -319,9 +327,25 @@ function muestra(m){
     el("a", {class:"back", href:"#muestras"}, "← Muestras"),
     el("div", {class:"page-head"}, el("h1", {class:"ti"}, m.titulo)),
     facts,
+    videos(m),
     gallery(m),
     prose
   );
+}
+
+function videos(m){
+  const vs = (m.videos || []).map(v => el("figure", {class:"video" + (v[3] > v[2] ? " vertical" : "")},
+    el("video", Object.assign({src:v[0], controls:"", playsinline:"", preload:"metadata", width:String(v[2]), height:String(v[3])}, v[1] ? {poster:v[1]} : {})),
+    v[4] ? el("figcaption", {class:"note"}, v[4]) : null
+  ));
+  if (m.embed){
+    const u = m.embed;
+    let src = null;
+    let k = u.match(/(?:youtu\.be\/|v=|shorts\/)([\w-]{6,})/); if (k) src = "https://www.youtube-nocookie.com/embed/" + k[1];
+    k = u.match(/vimeo\.com\/(?:video\/)?(\d+)/); if (k) src = "https://player.vimeo.com/video/" + k[1];
+    if (src) vs.push(el("figure", {class:"video embed"}, el("iframe", {src, title:"Video de " + m.titulo, allow:"fullscreen; picture-in-picture", allowfullscreen:"", loading:"lazy"})));
+  }
+  return vs.length ? el("div", {class:"videos"}, vs) : null;
 }
 
 function gallery(m){
