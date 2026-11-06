@@ -64,7 +64,9 @@ nav a[aria-current="page"]{ color:var(--fg); border-bottom-color:var(--fg); }
 /* Inicio */
 .home{ display:flex; flex-direction:column; gap:20px; }
 .hero{ margin:0; display:flex; flex-direction:column; gap:8px; }
-.hero img{ display:block; width:100%; max-width:100%; aspect-ratio:3 / 2; object-fit:cover; background:var(--slot); }
+/* Portada apaisada: alta como algo más de la mitad de la pantalla, para que foto, presentación y pie entren juntos */
+.hero img{ display:block; width:100%; max-width:100%; height:clamp(240px, 55vh, 560px); object-fit:cover; object-position:50% 55%; background:var(--slot); }
+@media (max-width:560px){ .hero img{ height:auto; aspect-ratio:4 / 3; } }
 .intro{ max-width:60ch; font-size:17px; line-height:1.5; text-wrap:pretty; margin:0; }
 
 /* Páginas */
