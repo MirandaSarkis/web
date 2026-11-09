@@ -534,10 +534,9 @@ function contacto(){
 
 const ROUTES = {
   muestras, textos, prensa, bio, contacto,
-  obras: () => obrasIndex(null),
-  "obras-ceramica": () => obrasIndex("ceramica"),
-  "obras-dibujo": () => obrasIndex("dibujo")
+  obras: () => obrasIndex(null)
 };
+Object.keys(CATS).forEach(k => { ROUTES["obras-" + k] = () => obrasIndex(k); });
 
 function render(){
   if (!box.hidden) closeBox();
