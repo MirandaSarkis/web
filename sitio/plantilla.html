@@ -346,9 +346,10 @@ function muestra(m, volver){
     el("a", {class:"back", href:"#" + volver[0]}, "← " + volver[1]),
     el("div", {class:"page-head"}, el("h1", {class:"ti"}, m.titulo)),
     facts,
+    volver[0] === "residencias" ? prose : null,
     videos(m),
     gallery(m),
-    prose
+    volver[0] === "residencias" ? null : prose
   );
 }
 
