@@ -18,21 +18,14 @@ img{ max-width:100%; }
 [hidden]{ display:none !important; }
 /* Layout: sobria, la obra primero. Nombre + menú arriba, imagen grande, fichas en mono, textos a 62ch. */
 :root{
-  --bg:#f3f3f1;
-  --fg:#1c1b1a;
-  --muted:#6e6a66;
-  --line:#d6d3cf;
-  --slot:#e8e6e2;
+  --bg:#ffffff;
+  --fg:#111111;
+  --muted:#6b6b6b;
+  --line:#dddddd;
+  --slot:#f2f2f2;
   --font-text:"Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
   --font-mono:"IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
-}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --bg:#151514; --fg:#ebe9e5; --muted:#9a958f; --line:#34322f; --slot:#1f1e1c; color-scheme:dark;
-  }
-}
-:root[data-theme="dark"]{
-  --bg:#151514; --fg:#ebe9e5; --muted:#9a958f; --line:#34322f; --slot:#1f1e1c; color-scheme:dark;
+  color-scheme:light;
 }
 
 *, *::before, *::after{ box-sizing:border-box; }
@@ -249,7 +242,6 @@ footer{
 
   <footer>
     <span>Miranda Sarkis · La Rioja, Argentina</span>
-    <span>Representada por Luogo Galería</span>
   </footer>
 </div>
 
