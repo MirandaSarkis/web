@@ -406,6 +406,8 @@ def main():
     if dominio.exists():
         shutil.copy(dominio, SALIDA / "CNAME")
     (SALIDA / ".nojekyll").write_text("")
+    for icono in (SITIO / "icono").glob("*"):
+        shutil.copy(icono, SALIDA / icono.name)
 
     n_fotos = sum(len(v) for v in fotos.values()) + sum(len(o["items"]) for o in obras)
     print(f"Listo: {len(muestras)} muestras, {len(residencias)} residencias, {len(obras)} obras, {n_fotos} fotos.")
