@@ -213,8 +213,8 @@ def leer_inicio():
             "alt": campos.get("descripcion", campos.get("descripción", "")) or "Obra de Miranda Sarkis"}
 
 
-def leer_muestras():
-    base = CONTENIDO / "muestras"
+def leer_muestras(seccion="muestras", prefijo=""):
+    base = CONTENIDO / seccion
     out, fotos = [], {}
     if not base.exists():
         return out, fotos
@@ -222,7 +222,7 @@ def leer_muestras():
         campos, filas, parrafos = leer_ficha(buscar_ficha(carpeta))
         titulo = campos.get("titulo") or sin_numero(carpeta.name)
         anio = campos.get("anio") or (re.match(r"^\s*(\d{4})", carpeta.name) or [None, ""])[1]
-        mid = slug(titulo)
+        mid = prefijo + slug(titulo)
         especiales = {"titulo", "anio", "lugar", "subtitulo", "epigrafe", "firma", "video"}
         ficha = [[k, v] for k, v in filas if CLAVES.get(k.lower()) not in especiales and v]
         m = {"id": mid, "titulo": titulo, "anio": anio, "lugar": campos.get("lugar", ""), "ficha": ficha}
@@ -244,12 +244,12 @@ def leer_muestras():
             m["embed"] = campos["video"]
         lista = []
         for i, f in enumerate(fotos_de(carpeta)):
-            r = guardar_foto(f, f"img/muestras/{mid}/{i + 1}.jpg")
+            r = guardar_foto(f, f"img/{seccion}/{mid}/{i + 1}.jpg")
             if r:
                 lista.append(r)
         fotos[mid] = lista
         if not lista:
-            aviso(f"La muestra '{titulo}' no tiene fotos")
+            aviso(f"'{titulo}' ({seccion}) no tiene fotos")
         out.append(m)
     return out, fotos
 
@@ -388,11 +388,13 @@ def main():
 
     inicio = leer_inicio()
     muestras, fotos = leer_muestras()
+    residencias, fotos_res = leer_muestras("residencias", "residencia-")
+    fotos.update(fotos_res)
     obras, cats = leer_obras()
     bio = leer_bio()
     datos = {
         "SITIO": {"inicio": inicio, "retrato": bio["retrato"], "pie_retrato": bio["pie"], "contacto": leer_contacto()},
-        "MUESTRAS": muestras, "FOTOS": fotos, "OBRAS": obras, "CATS": cats,
+        "MUESTRAS": muestras, "RESIDENCIAS": residencias, "FOTOS": fotos, "OBRAS": obras, "CATS": cats,
         "STATEMENT": leer_parrafos("textos/statement"), "BIO": bio["bio"], "CV": leer_cv(), "PRENSA": leer_prensa(),
     }
     js = "\n".join(f"const {k} = {json.dumps(v, ensure_ascii=False)};" for k, v in datos.items())
@@ -406,7 +408,7 @@ def main():
     (SALIDA / ".nojekyll").write_text("")
 
     n_fotos = sum(len(v) for v in fotos.values()) + sum(len(o["items"]) for o in obras)
-    print(f"Listo: {len(muestras)} muestras, {len(obras)} obras, {n_fotos} fotos.")
+    print(f"Listo: {len(muestras)} muestras, {len(residencias)} residencias, {len(obras)} obras, {n_fotos} fotos.")
     if avisos:
         print(f"{len(avisos)} aviso(s):")
         for a in avisos:

@@ -98,3 +98,17 @@ que se ve antes de darle play, agregá una foto con el mismo nombre: `video.jpg`
 
 En **Actions** se ve cada publicación. Si una sale con una cruz roja, abrila: al final
 dice qué archivo no se pudo leer. Los avisos (por ejemplo, una obra sin fotos) también aparecen ahí.
+
+## Residencias
+
+Funciona igual que Muestras: una carpeta por residencia dentro de `contenido/residencias/`,
+con el año adelante (por ejemplo `2022. Raíces`), las fotos numeradas y un `ficha.txt`:
+
+```
+Título: Raíces
+Año: 2022
+Lugar: Aconquija, Catamarca
+Fechas: Marzo / Abril 2022
+---
+Acá va el texto sobre la residencia (opcional).
+```

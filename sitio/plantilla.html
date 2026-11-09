@@ -233,6 +233,7 @@ footer{
       <ul>
         <li><a href="#muestras">Muestras</a></li>
         <li><a href="#obras">Obras</a></li>
+        <li><a href="#residencias">Residencias</a></li>
         <li><a href="#textos">Textos</a></li>
         <li><a href="#prensa">Prensa</a></li>
         <li><a href="#bio">Bio / CV</a></li>
@@ -309,7 +310,23 @@ function muestras(){
   );
 }
 
-function muestra(m){
+function residencias(){
+  return el("section", {class:"page"},
+    el("h1", null, "Residencias"),
+    el("div", {class:"block"},
+      el("ul", {class:"shows"}, RESIDENCIAS.map(m =>
+        el("li", null, el("a", {href:"#" + m.id},
+          el("span", {class:"y"}, m.anio),
+          el("div", null, el("p", {class:"ti"}, m.titulo), el("p", {class:"pl"}, m.lugar)),
+          el("span", {class:"go", "aria-hidden":"true"}, "→")
+        ))
+      ))
+    )
+  );
+}
+
+function muestra(m, volver){
+  volver = volver || ["muestras", "Muestras"];
   const facts = el("dl", {class:"facts"},
     el("dt", null, "Año"), el("dd", null, m.anio),
     el("dt", null, "Lugar"), el("dd", null, m.lugar),
@@ -326,7 +343,7 @@ function muestra(m){
     );
   }
   return el("section", {class:"page"},
-    el("a", {class:"back", href:"#muestras"}, "← Muestras"),
+    el("a", {class:"back", href:"#" + volver[0]}, "← " + volver[1]),
     el("div", {class:"page-head"}, el("h1", {class:"ti"}, m.titulo)),
     facts,
     videos(m),
@@ -533,7 +550,7 @@ function contacto(){
 }
 
 const ROUTES = {
-  muestras, textos, prensa, bio, contacto,
+  muestras, residencias, textos, prensa, bio, contacto,
   obras: () => obrasIndex(null)
 };
 Object.keys(CATS).forEach(k => { ROUTES["obras-" + k] = () => obrasIndex(k); });
@@ -542,10 +559,11 @@ function render(){
   if (!box.hidden) closeBox();
   const key = (location.hash || "").replace("#", "");
   const m = MUESTRAS.find(x => x.id === key);
+  const r = RESIDENCIAS.find(x => x.id === key);
   const o = OBRAS.find(x => x.id === key);
   view.innerHTML = "";
-  view.append(m ? muestra(m) : o ? obra(o) : ROUTES[key] ? ROUTES[key]() : home());
-  const navKey = m ? "muestras" : (o || key.startsWith("obras")) ? "obras" : key;
+  view.append(m ? muestra(m) : r ? muestra(r, ["residencias", "Residencias"]) : o ? obra(o) : ROUTES[key] ? ROUTES[key]() : home());
+  const navKey = m ? "muestras" : r ? "residencias" : (o || key.startsWith("obras")) ? "obras" : key;
   navLinks.forEach(a => a.toggleAttribute("aria-current", a.getAttribute("href") === "#" + navKey));
   navLinks.forEach(a => { if (a.hasAttribute("aria-current")) a.setAttribute("aria-current", "page"); });
   window.scrollTo(0, 0);
