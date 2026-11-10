@@ -203,13 +203,18 @@ def con_italicas(t):
 
 def leer_inicio():
     carpeta = CONTENIDO / "inicio"
-    campos, _, parrafos = leer_ficha(buscar_ficha(carpeta, ("inicio", "ficha", "info")))
+    campos, filas, parrafos = leer_ficha(buscar_ficha(carpeta, ("inicio", "ficha", "info")))
+    destacadas = []
+    for k, v in filas:
+        if k.lower() in ("obras destacadas", "destacadas", "obras"):
+            destacadas = [slug(t) for t in re.split(r"\s*;\s*", v) if t.strip()]
     fs = fotos_de(carpeta)
     if not fs:
         aviso("Falta la foto de portada en contenido/inicio/")
-        return {"portada": None, "registro": "", "intro": " ".join(parrafos), "alt": ""}
+        return {"portada": None, "registro": "", "pie": "", "destacadas": destacadas, "intro": " ".join(parrafos), "alt": ""}
     f = guardar_foto(fs[0], "img/portada.jpg", 2400)
-    return {"portada": f, "registro": campos.get("registro", ""), "intro": " ".join(parrafos),
+    return {"portada": f, "registro": campos.get("registro", ""), "pie": campos.get("pie", ""),
+            "destacadas": destacadas, "intro": " ".join(parrafos),
             "alt": campos.get("descripcion", campos.get("descripción", "")) or "Obra de Miranda Sarkis"}
 
 
@@ -244,9 +249,11 @@ def leer_muestras(seccion="muestras", prefijo=""):
             m["embed"] = campos["video"]
         lista = []
         for i, f in enumerate(fotos_de(carpeta)):
-            r = guardar_foto(f, f"img/{seccion}/{mid}/{i + 1}.jpg")
+            r = guardar_foto(f, f"img/{seccion}/{mid}/{i + 1}.jpg", mini=(i == 0))
             if r:
-                lista.append(r)
+                if i == 0:
+                    m["cover"] = r[3]
+                lista.append(r[:3])
         fotos[mid] = lista
         if not lista:
             aviso(f"'{titulo}' ({seccion}) no tiene fotos")

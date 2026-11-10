@@ -91,9 +91,29 @@ h1.ti{ font-weight:400; font-style:italic; }
 .shows li{ border-bottom:1px solid var(--line); }
 .shows li:first-child{ border-top:1px solid var(--line); }
 .shows a{
-  display:grid; grid-template-columns:92px minmax(0,1fr) auto; gap:16px; align-items:baseline;
-  padding-block:20px; text-decoration:none;
+  display:grid; grid-template-columns:190px 56px minmax(0,1fr) auto; gap:24px; align-items:center;
+  padding-block:18px; text-decoration:none;
 }
+.shows .im{ display:block; aspect-ratio:3 / 2; overflow:hidden; background:var(--slot); }
+.shows .im img{ width:100%; height:100%; object-fit:cover; display:block; }
+.home-sec{ display:flex; flex-direction:column; gap:16px; margin-top:36px; }
+.sec-head{ display:flex; justify-content:space-between; align-items:baseline; gap:16px; padding-bottom:10px; border-bottom:1px solid var(--line); }
+.sec-head h2{ margin:0; font-family:var(--font-mono); font-size:12px; font-weight:400; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); }
+.sec-head a{ font-size:14px; color:var(--muted); text-decoration:none; }
+.sec-head a:hover{ color:var(--fg); }
+.latest{ display:grid; grid-template-columns:minmax(0,54%) minmax(0,1fr); gap:32px; align-items:end; text-decoration:none; }
+.latest .im{ display:block; aspect-ratio:3 / 2; overflow:hidden; background:var(--slot); }
+.latest .im img{ width:100%; height:100%; object-fit:cover; display:block; }
+.latest .tx{ display:flex; flex-direction:column; gap:8px; padding-bottom:4px; }
+.latest .ti{ font-size:clamp(24px, 3vw, 30px); font-style:italic; line-height:1.15; text-wrap:balance; }
+.latest .pl{ color:var(--muted); font-size:15px; }
+.latest .go{ margin-top:12px; font-size:15px; }
+.latest:hover .ti{ text-decoration:underline; text-decoration-thickness:1px; text-underline-offset:4px; }
+.year{ display:flex; flex-direction:column; gap:16px; }
+.year + .year{ margin-top:28px; }
+.year-head{ display:flex; align-items:baseline; gap:14px; padding-bottom:10px; border-bottom:1px solid var(--line); }
+.year-head h2{ margin:0; font-size:22px; font-weight:500; }
+@media (max-width:700px){ .latest{ grid-template-columns:1fr; gap:14px; } }
 .shows .ti{ font-size:clamp(19px, 2.6vw, 24px); font-style:italic; line-height:1.3; text-wrap:balance; margin:0 0 4px; }
 .shows .pl{ color:var(--muted); margin:0; }
 .shows .go{ font-family:var(--font-mono); font-size:13px; color:var(--muted); transition:transform .15s ease, color .15s ease; }
@@ -169,12 +189,12 @@ h1.ti{ font-weight:400; font-style:italic; }
 .tab{ font-size:14px; text-decoration:none; color:var(--muted); border:1px solid var(--line); padding:6px 14px; }
 .tab:hover{ color:var(--fg); border-color:var(--fg); }
 .tab[aria-current]{ color:var(--bg); background:var(--fg); border-color:var(--fg); }
-.works{ list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:36px 20px; }
+.works{ list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(4, minmax(0,1fr)); gap:32px 20px; }
 .works a{ display:flex; flex-direction:column; gap:6px; text-decoration:none; }
 .works .thumb{ display:block; aspect-ratio:1 / 1; max-width:100%; overflow:hidden; background:var(--slot); margin-bottom:6px; }
 .works .thumb img{ width:100%; height:100%; object-fit:cover; display:block; transition:transform .4s ease; }
 .works a:hover .thumb img{ transform:scale(1.02); }
-.works .wt{ font-style:italic; font-size:17px; line-height:1.3; text-wrap:balance; }
+.works .wt{ font-style:italic; font-size:16px; line-height:1.3; text-wrap:balance; }
 .works .wm{ font-family:var(--font-mono); font-size:12px; color:var(--muted); }
 .works-g{ columns:auto; display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:28px 20px; align-items:start; }
 .piece{ margin:0; min-width:0; display:flex; flex-direction:column; gap:6px; }
@@ -188,6 +208,7 @@ h1.ti{ font-weight:400; font-style:italic; }
 .gal p{ margin:0; }
 .gal .gname{ font-size:clamp(18px, 2.4vw, 22px); margin-bottom:6px; }
 .gal a{ text-underline-offset:3px; text-decoration-thickness:1px; }
+@media (max-width:1000px){ .works{ grid-template-columns:repeat(3, minmax(0,1fr)); } }
 @media (max-width:900px){ .works{ grid-template-columns:repeat(2, minmax(0,1fr)); } .works-g{ grid-template-columns:repeat(2, minmax(0,1fr)); } }
 
 /* Videos */
@@ -209,13 +230,16 @@ footer{
   header{ flex-direction:column; align-items:flex-start; }
   .intro{ font-size:16px; }
   .rows li{ grid-template-columns:1fr; gap:2px; }
-  .shows a{ grid-template-columns:1fr; gap:4px; }
+  .shows a{ grid-template-columns:110px minmax(0,1fr); gap:6px 14px; align-items:start; }
+  .shows .im{ grid-row:1 / span 2; }
+  .shows .y{ grid-column:2; }
+  .shows a > div{ grid-column:2; }
   .shows .go{ display:none; }
   .facts{ grid-template-columns:1fr; gap:0; }
   .facts dd{ margin-bottom:8px; }
   .cols{ columns:1; }
   .works-g{ grid-template-columns:repeat(2, minmax(0,1fr)); gap:20px 12px; }
-  .works{ grid-template-columns:1fr; }
+  .works{ grid-template-columns:repeat(2, minmax(0,1fr)); gap:24px 12px; }
 }
 @media (prefers-reduced-motion: reduce){ *{ transition:none !important; } }
 </style>
@@ -279,14 +303,50 @@ function el(tag, attrs, ...kids){
 const paras = arr => arr.map(t => el("p", null, t));
 
 function home(){
-  const ini = SITIO.inicio, p = ini.portada;
+  const ini = SITIO.inicio, p = ini.portada, ult = MUESTRAS[0];
+  let dest = (ini.destacadas || []).map(s => OBRAS.find(o => o.id === "obra-" + s)).filter(Boolean);
+  if (!dest.length) dest = OBRAS.slice(0, 4);
+  const pie = [ini.pie, ini.registro ? "Registro: " + ini.registro : ""].filter(Boolean).join(" · ");
   return el("section", {class:"home"},
     p ? el("figure", {class:"hero"},
       el("img", {src:p[0], alt:ini.alt, width:String(p[1]), height:String(p[2])}),
-      ini.registro ? el("figcaption", {class:"note credit"}, "Registro: " + ini.registro) : null
+      pie ? el("figcaption", {class:"note credit"}, pie) : null
     ) : null,
-    ini.intro ? el("p", {class:"intro"}, ini.intro) : null
+    ini.intro ? el("p", {class:"intro"}, ini.intro) : null,
+    ult ? el("div", {class:"home-sec"},
+      el("div", {class:"sec-head"}, el("h2", null, "Muestra más reciente"), el("a", {href:"#muestras"}, "Todas las muestras →")),
+      el("a", {class:"latest", href:"#" + ult.id},
+        el("span", {class:"im"}, ult.cover ? el("img", {src:ult.cover, alt:"", loading:"lazy", decoding:"async"}) : null),
+        el("span", {class:"tx"},
+          el("span", {class:"note"}, ult.anio),
+          el("span", {class:"ti"}, ult.titulo),
+          el("span", {class:"pl"}, ult.lugar),
+          el("span", {class:"go"}, "Ver la muestra →")
+        )
+      )
+    ) : null,
+    dest.length ? el("div", {class:"home-sec"},
+      el("div", {class:"sec-head"}, el("h2", null, "Obras"), el("a", {href:"#obras"}, "Todas las obras →")),
+      el("ul", {class:"works"}, dest.map(tarjetaObra))
+    ) : null
   );
+}
+
+function filaMuestra(m){
+  return el("li", null, el("a", {href:"#" + m.id},
+    el("span", {class:"im"}, m.cover ? el("img", {src:m.cover, alt:"", loading:"lazy", decoding:"async"}) : null),
+    el("span", {class:"y"}, m.anio),
+    el("div", null, el("p", {class:"ti"}, m.titulo), el("p", {class:"pl"}, m.lugar)),
+    el("span", {class:"go", "aria-hidden":"true"}, "→")
+  ));
+}
+
+function tarjetaObra(o){
+  return el("li", null, el("a", {href:"#" + o.id},
+    el("span", {class:"thumb"}, el("img", {src:o.cover, alt:o.titulo, loading:"lazy", decoding:"async"})),
+    el("span", {class:"wt"}, o.titulo),
+    el("span", {class:"wm"}, CATS[o.cat] + " · " + o.anio)
+  ));
 }
 
 function muestras(){
@@ -294,13 +354,7 @@ function muestras(){
     el("h1", null, "Muestras"),
     el("div", {class:"block"},
       el("h2", null, "Individuales"),
-      el("ul", {class:"shows"}, MUESTRAS.map(m =>
-        el("li", null, el("a", {href:"#" + m.id},
-          el("span", {class:"y"}, m.anio),
-          el("div", null, el("p", {class:"ti"}, m.titulo), el("p", {class:"pl"}, m.lugar)),
-          el("span", {class:"go", "aria-hidden":"true"}, "→")
-        ))
-      ))
+      el("ul", {class:"shows"}, MUESTRAS.map(filaMuestra))
     )
   );
 }
@@ -309,13 +363,7 @@ function residencias(){
   return el("section", {class:"page"},
     el("h1", null, "Residencias"),
     el("div", {class:"block"},
-      el("ul", {class:"shows"}, RESIDENCIAS.map(m =>
-        el("li", null, el("a", {href:"#" + m.id},
-          el("span", {class:"y"}, m.anio),
-          el("div", null, el("p", {class:"ti"}, m.titulo), el("p", {class:"pl"}, m.lugar)),
-          el("span", {class:"go", "aria-hidden":"true"}, "→")
-        ))
-      ))
+      el("ul", {class:"shows"}, RESIDENCIAS.map(filaMuestra))
     )
   );
 }
@@ -473,6 +521,8 @@ function pendiente(titulo, desc){
 
 function obrasIndex(cat){
   const list = cat ? OBRAS.filter(o => o.cat === cat) : OBRAS;
+  const anioDe = o => { const m = String(o.anio).match(/\d{4}/g); return m ? +m[m.length - 1] : 0; };
+  const anios = [...new Set(list.map(anioDe))].sort((a, b) => b - a);
   const tab = (href, label, on) => el("a", {class:"tab", href, ...(on ? {"aria-current":"true"} : {})}, label);
   return el("section", {class:"page"},
     el("h1", null, "Obras"),
@@ -480,13 +530,14 @@ function obrasIndex(cat){
       tab("#obras", "Todas", !cat),
       Object.keys(CATS).map(k => tab("#obras-" + k, CATS[k], cat === k))
     ),
-    el("ul", {class:"works"}, list.map(o =>
-      el("li", null, el("a", {href:"#" + o.id},
-        el("span", {class:"thumb"}, el("img", {src:o.cover, alt:o.titulo, loading:"lazy", decoding:"async"})),
-        el("span", {class:"wt"}, o.titulo),
-        el("span", {class:"wm"}, CATS[o.cat] + " · " + o.anio)
-      ))
-    ))
+    el("div", null, anios.map(a => {
+      const delAnio = list.filter(o => anioDe(o) === a);
+      return el("section", {class:"year"},
+        el("div", {class:"year-head"}, el("h2", null, a ? String(a) : "Sin fecha"),
+          el("span", {class:"note"}, delAnio.length + (delAnio.length === 1 ? " obra" : " obras"))),
+        el("ul", {class:"works"}, delAnio.map(tarjetaObra))
+      );
+    }))
   );
 }
 

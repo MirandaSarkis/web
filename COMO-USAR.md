@@ -112,3 +112,15 @@ Fechas: Marzo / Abril 2022
 ---
 Acá va el texto sobre la residencia (opcional).
 ```
+
+## Inicio: pie de la portada y obras destacadas
+
+En `contenido/inicio/inicio.txt`, arriba de la línea `---`:
+
+```
+Pie de foto: La Rioja, donde recolecto la arcilla
+Obras destacadas: Abrí una piedra; La danza; Roca madre; La creación del mundo
+```
+
+Las obras destacadas son las cuatro que aparecen en el inicio: van los títulos tal como figuran
+en Obras, separados por punto y coma. La "Muestra más reciente" se elige sola (la del año más nuevo).
