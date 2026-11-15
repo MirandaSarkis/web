@@ -1,0 +1,2 @@
+---
+Each stone carries one word. Read in order, they form the sentence “Nuestro cuerpo es el único pedazo de tierra que nos pertenece”: “Our body is the only piece of land that belongs to us.”

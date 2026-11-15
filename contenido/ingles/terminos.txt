@@ -1,0 +1,64 @@
+# Términos cortos que se repiten en las fichas: técnicas, formatos, lugares, etc.
+# Una por línea:   En español = In English
+# Si agregás una técnica o un formato nuevo, sumalo acá.
+
+# --- Categorías de obras ---
+Categoría Cerámica = Ceramics
+Categoría Dibujo = Drawing
+Categoría Fotografía = Photography
+
+# --- Técnicas ---
+Cerámica = Ceramic
+Cerámica horneada a leña = Wood-fired ceramic
+Cerámica, micas = Ceramic, mica
+Cerámica, mica = Ceramic, mica
+Cerámica, piedra = Ceramic, stone
+Sublimación sobre microtul = Dye sublimation on micro tulle
+Grafito sobre papel = Graphite on paper
+Tinta sobre papel Canson Montval = Ink on Canson Montval paper
+Tinta sobre papel canson 300 gr = Ink on Canson paper, 300 gsm
+Tinta sobre papel canson de 300 gr = Ink on Canson paper, 300 gsm
+Tinta y acuarela sobre papel canson de 300 gr = Ink and watercolor on Canson paper, 300 gsm
+Tinta y acuarela sobre papel canson 300 gr = Ink and watercolor on Canson paper, 300 gsm
+Tinta sobre papel, algunas con grafito, lápiz o acuarela = Ink on paper, some with graphite, pencil or watercolor
+Tinta sobre papel = Ink on paper
+Tinta y acuarela sobre papel = Ink and watercolor on paper
+Tinta y grafito sobre papel = Ink and graphite on paper
+Tinta y lápiz sobre papel = Ink and pencil on paper
+
+# --- Formatos y medidas ---
+Medidas variables = Variable dimensions
+Tríptico = Triptych
+Díptico = Diptych
+Políptico = Polyptych
+piezas = pieces
+obras = works
+dibujos = drawings
+Serie de = Series of
+piezas de = pieces,
+aprox. = approx.
+c/u = each
+dípticos = diptychs
+tríptico = triptych
+dos telas de = two fabric panels,
+
+# --- Rótulos de las fichas ---
+Curaduría = Curator
+Texto = Text
+Registro = Photography
+Curaduría, texto y registro = Curator, text and photography
+Fechas = Dates
+Marzo / Abril 2022 = March / April 2022
+Entrevista = Interview
+Autorretrato = Self-portrait
+
+# --- Lugares ---
+Luogo Galería, sede Ciudad Autónoma de Buenos Aires, en Central Affair = Luogo Galería, Buenos Aires, at Central Affair
+Galería Ankara, Colonia Caroya, Córdoba = Galería Ankara, Colonia Caroya, Córdoba, Argentina
+Luogo Galería, Rafaela, Santa Fe = Luogo Galería, Rafaela, Santa Fe, Argentina
+Plegable, Córdoba = Plegable, Córdoba, Argentina
+Aconquija, Catamarca = Aconquija, Catamarca, Argentina
+
+# --- Más técnicas (piezas de las series) ---
+Acuarela y grafito sobre papel = Watercolor and graphite on paper
+Tinta, grafito y acuarela sobre papel canson 300 gr = Ink, graphite and watercolor on Canson paper, 300 gsm

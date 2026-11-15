@@ -231,6 +231,7 @@ def leer_muestras(seccion="muestras", prefijo=""):
         especiales = {"titulo", "anio", "lugar", "subtitulo", "epigrafe", "firma", "video"}
         ficha = [[k, v] for k, v in filas if CLAVES.get(k.lower()) not in especiales and v]
         m = {"id": mid, "titulo": titulo, "anio": anio, "lugar": campos.get("lugar", ""), "ficha": ficha}
+        ORIGEN[mid] = carpeta
         if campos.get("subtitulo"):
             m["subtitulo"] = campos["subtitulo"]
         if campos.get("epigrafe"):
@@ -298,6 +299,7 @@ def leer_obras():
             if not items:
                 aviso(f"La obra '{titulo}' no tiene fotos: no se publica")
                 continue
+            ORIGEN[oid] = carpeta
             o = {"id": oid, "cat": cat, "titulo": titulo, "anio": anio, "tec": tec, "med": med,
                  "cover": items[0][4], "items": items}
             if campos.get("formato"):
@@ -332,10 +334,11 @@ def leer_bio():
     return {"bio": parrafos, "retrato": retrato, "pie": campos.get("pie", "")}
 
 
-def leer_cv():
-    p = next((CONTENIDO / "bio" / ("cv" + e) for e in (".txt", ".md", ".docx") if (CONTENIDO / "bio" / ("cv" + e)).exists()), None)
+def leer_cv(nombre="cv"):
+    p = next((CONTENIDO / "bio" / (nombre + e) for e in (".txt", ".md", ".docx") if (CONTENIDO / "bio" / (nombre + e)).exists()), None)
     if not p:
-        aviso("Falta contenido/bio/cv.txt")
+        if nombre == "cv":
+            aviso("Falta contenido/bio/cv.txt")
         return []
     secciones = []
     for linea in leer_texto(p).replace("\r\n", "\n").split("\n"):
@@ -374,8 +377,8 @@ def leer_prensa():
     return notas
 
 
-def leer_contacto():
-    p = next((CONTENIDO / "contacto" / ("contacto" + e) for e in (".txt", ".md", ".docx") if (CONTENIDO / "contacto" / ("contacto" + e)).exists()), None)
+def leer_contacto(nombre="contacto"):
+    p = next((CONTENIDO / "contacto" / (nombre + e) for e in (".txt", ".md", ".docx") if (CONTENIDO / "contacto" / (nombre + e)).exists()), None)
     if not p:
         return []
     bloques = []
@@ -384,6 +387,218 @@ def leer_contacto():
         if lineas:
             bloques.append({"titulo": lineas[0].rstrip(":"), "lineas": lineas[1:]})
     return bloques
+
+
+# ---------- versión en inglés ----------
+#
+# La versión en inglés se arma a partir de la española:
+#   contenido/ingles/titulos.txt   títulos de muestras, obras y piezas   (Español = English)
+#   contenido/ingles/terminos.txt  técnicas, formatos, lugares, rótulos  (Español = English)
+#   <archivo>.en.txt               el texto largo en inglés, al lado del original
+#                                  (ficha.en.txt, statement.en.txt, bio.en.txt, cv.en.txt, ...)
+# Lo que no tiene traducción se muestra en español.
+
+ORIGEN = {}          # id de muestra/obra -> carpeta de contenido
+MOSTRAR_SELECTOR = False   # True: el sitio en español muestra el selector ES / EN y Google puede indexar /en/
+
+UI_EN = {
+    "Muestras": "Exhibitions", "Obras": "Works", "Residencias": "Residencies", "Textos": "Texts", "Prensa": "Press",
+    "Contacto": "Contact", "Individuales": "Solo exhibitions", "Muestra más reciente": "Latest exhibition",
+    "Todas las muestras →": "All exhibitions →", "Ver la muestra →": "View exhibition →", "Todas las obras →": "All works →",
+    "Año": "Year", "Lugar": "Location", "Formato": "Format", "Técnica": "Medium", "Medidas": "Dimensions",
+    "Registro": "Photography", "Registro: ": "Photo: ", "Todas": "All", " obra": " work", " obras": " works",
+    "Sin fecha": "Undated", "Textos de muestras": "Exhibition texts", ", sobre ": ", on ",
+    "Fotos de sala en preparación": "Installation views coming soon", ", vista ": ", view ", " de ": " of ",
+    "Ampliar ": "Enlarge ", "Video de ": "Video of ", "Retrato de Miranda Sarkis": "Portrait of Miranda Sarkis",
+    "En preparación": "Coming soon", "Filtrar por técnica": "Filter by medium",
+}
+ESTATICO_EN = [
+    ('<html lang="es">', '<html lang="en">'),
+    ("Miranda Sarkis, artista visual. Nació en La Rioja en 1994; vive y trabaja en Córdoba, Argentina.",
+     "Miranda Sarkis, visual artist. Born in La Rioja, Argentina, in 1994; lives and works in Córdoba."),
+    ('aria-label="Secciones"', 'aria-label="Sections"'),
+    (">Muestras</a>", ">Exhibitions</a>"), (">Obras</a>", ">Works</a>"), (">Residencias</a>", ">Residencies</a>"),
+    (">Textos</a>", ">Texts</a>"), (">Prensa</a>", ">Press</a>"), (">Contacto</a>", ">Contact</a>"),
+    ('aria-label="Visor de fotos"', 'aria-label="Photo viewer"'), ('aria-label="Foto anterior"', 'aria-label="Previous photo"'),
+    ('aria-label="Foto siguiente"', 'aria-label="Next photo"'), ('aria-label="Cerrar">Cerrar<', 'aria-label="Close">Close<'),
+]
+MESES = {"enero": "January", "febrero": "February", "marzo": "March", "abril": "April", "mayo": "May", "junio": "June",
+         "julio": "July", "agosto": "August", "septiembre": "September", "setiembre": "September", "octubre": "October",
+         "noviembre": "November", "diciembre": "December"}
+SUFIJO = re.compile(
+    r"^(.*?)((?:\s+N°\s*\d+)?(?:\s+[IVX]+(?:,\s*[IVX]+)*(?:\s+y\s+[IVX]+)?)?"
+    r"(?:\s+\((?:detalle|díptico|tríptico|políptico)\))?(?:,\s*[IVX]+)?)$")
+
+
+def leer_pares(nombre):
+    p = CONTENIDO / "ingles" / nombre
+    pares = {}
+    if p.exists():
+        for linea in p.read_text(encoding="utf-8-sig").split("\n"):
+            linea = linea.strip()
+            if linea and not linea.startswith("#") and " = " in linea:
+                es, en = linea.split(" = ", 1)
+                pares[nfc(es.strip())] = en.strip()
+    return pares
+
+
+def hermano_en(path):
+    """ficha.txt -> ficha.en.txt (si existe)."""
+    if not path:
+        return None
+    for ext in (".txt", ".md", ".docx"):
+        cand = path.with_name(path.stem + ".en" + ext)
+        if cand.exists():
+            return cand
+    return None
+
+
+class Ingles:
+    def __init__(self):
+        self.tit = leer_pares("titulos.txt")
+        self.term = leer_pares("terminos.txt")
+        self.frag = sorted(self.term.items(), key=lambda kv: -len(kv[0]))
+        self.faltan = set()
+
+    def titulo(self, t):
+        """Traducción de un título, o None si no hay (o es igual al original)."""
+        t = nfc(t)
+        en = self.tit.get(t)
+        if en is None:
+            m = SUFIJO.match(t)
+            if m and m.group(2) and m.group(1) in self.tit:
+                suf = m.group(2).replace(" y ", " and ").replace("N°", "No. ").replace("No.  ", "No. ")
+                for es_, en_ in (("detalle", "detail"), ("díptico", "diptych"), ("tríptico", "triptych"), ("políptico", "polyptych")):
+                    suf = suf.replace(es_, en_)
+                en = self.tit[m.group(1)] + suf
+        return en if en and en != t else None
+
+    def doble(self, t):
+        """'Título' -> 'Título (Translation)', para epígrafes."""
+        en = self.titulo(t)
+        if not en:
+            return t
+        return f"{t} [{en}]" if ("(" in t or "(" in en) else f"{t} ({en})"
+
+    def corto(self, t, avisar=True):
+        """Técnicas, formatos, medidas y lugares."""
+        if not t:
+            return t
+        t = nfc(t)
+        if t in self.term:
+            return self.term[t]
+        out = t
+        for es, en in self.frag:
+            out = re.sub(r"(?<![\wáéíóúñ])" + re.escape(es) + r"(?![\wáéíóúñ])", lambda _m, en=en: en, out)
+        out = re.sub(r"(?<=\d),(?=\d)", ".", out)
+        out = re.sub(r"(?<=cm) y (?=\d)", " and ", out)
+        if avisar and re.search(r"[áéíóúñ]| (de|con|sobre|y) ", out):
+            self.faltan.add(t)
+        return out
+
+    def fecha(self, t):
+        t = re.sub(r"(\d{1,2}) de (\w+) de (\d{4})",
+                   lambda m: f"{MESES.get(m.group(2).lower(), m.group(2))} {m.group(1)}, {m.group(3)}", t)
+        return re.sub(r"\b(" + "|".join(MESES) + r") de (\d{4})",
+                      lambda m: f"{MESES[m.group(1).lower()]} {m.group(2)}", t, flags=re.I)
+
+    def epigrafe(self, cap, con_titulo):
+        partes = cap.split(" · ")
+        if con_titulo:
+            partes[0] = self.doble(partes[0])
+        return " · ".join([partes[0]] + [self.corto(x) for x in partes[1:]])
+
+
+def prefijar(x, pre="../"):
+    """Las fotos y videos se comparten con el sitio en español: desde /en/ quedan un nivel arriba."""
+    if isinstance(x, str):
+        return pre + x if x.startswith(("img/", "video/")) else x
+    if isinstance(x, list):
+        return [prefijar(v, pre) for v in x]
+    if isinstance(x, dict):
+        return {k: prefijar(v, pre) for k, v in x.items()}
+    return x
+
+
+def datos_en(datos):
+    import copy
+    T = Ingles()
+    d = copy.deepcopy(datos)
+
+    # inicio
+    ini = d["SITIO"]["inicio"]
+    f = hermano_en(buscar_ficha(CONTENIDO / "inicio", ("inicio", "ficha", "info")))
+    if f:
+        campos, filas, parrafos = leer_ficha(f)
+        ini["intro"] = " ".join(parrafos) or ini["intro"]
+        ini["pie"] = campos.get("pie", ini.get("pie", ""))
+        for k, v in filas:
+            if k.lower() in ("descripción", "descripcion"):
+                ini["alt"] = v
+    d["SITIO"]["pie_retrato"] = T.corto(d["SITIO"].get("pie_retrato", ""), False)
+
+    # muestras y residencias
+    for m in d["MUESTRAS"] + d["RESIDENCIAS"]:
+        tr = T.titulo(m["titulo"])
+        if tr:
+            m["tr"] = tr
+        m["lugar"] = T.corto(m["lugar"], False)
+        m["ficha"] = [[T.corto(k, False), T.fecha(T.corto(v, False))] for k, v in m["ficha"]]
+        for v in m.get("videos") or []:
+            v[4] = T.corto(v[4], False)
+        f = hermano_en(buscar_ficha(ORIGEN[m["id"]])) if m["id"] in ORIGEN else None
+        if f:
+            campos, _, parrafos = leer_ficha(f)
+            for k in ("lugar", "subtitulo", "epigrafe", "firma"):
+                if campos.get(k):
+                    m[k] = campos[k]
+            if parrafos:
+                numerados = all(re.match(r"^\d+\s*[.\-)]\s*", p) for p in parrafos)
+                m.pop("pasajes", None)
+                m["texto"] = None
+                if numerados:
+                    m["pasajes"] = [re.sub(r"^\d+\s*[.\-)]\s*", "", p) for p in parrafos]
+                else:
+                    m["texto"] = parrafos
+
+    # obras
+    for o in d["OBRAS"]:
+        tr = T.titulo(o["titulo"])
+        if tr:
+            o["tr"] = tr
+        o["tec"], o["med"] = T.corto(o["tec"]), T.corto(o["med"])
+        if o.get("nota"):
+            o["nota"] = T.corto(o["nota"])
+        for it in o["items"]:
+            it[3] = T.epigrafe(it[3], True)
+        f = hermano_en(buscar_ficha(ORIGEN[o["id"]])) if o["id"] in ORIGEN else None
+        if f:
+            _, _, parrafos = leer_ficha(f)
+            if parrafos:
+                o["texto"] = parrafos
+    d["CATS"] = {k: T.term.get("Categoría " + v, v) for k, v in d["CATS"].items()}
+
+    # textos
+    def parrafos_en(rel, actual):
+        p = next((CONTENIDO / (rel + ".en" + e) for e in (".txt", ".md", ".docx") if (CONTENIDO / (rel + ".en" + e)).exists()), None)
+        if not p:
+            return actual
+        texto = leer_texto(p).replace("\r\n", "\n")
+        return [re.sub(r"\s*\n\s*", " ", x).strip() for x in re.split(r"\n\s*\n", texto) if x.strip()]
+    d["STATEMENT"] = parrafos_en("textos/statement", d["STATEMENT"])
+    f = hermano_en(buscar_ficha(CONTENIDO / "bio", ("bio",)))
+    if f:
+        campos, _, parrafos = leer_ficha(f)
+        d["BIO"] = parrafos or d["BIO"]
+        if campos.get("pie"):
+            d["SITIO"]["pie_retrato"] = campos["pie"]
+    d["CV"] = leer_cv("cv.en") or d["CV"]
+    d["SITIO"]["contacto"] = leer_contacto("contacto.en") or d["SITIO"]["contacto"]
+    d["PRENSA"] = [[T.fecha(medio), titulo, link] for medio, titulo, link in d["PRENSA"]]
+
+    for t in sorted(T.faltan):
+        aviso(f"Sin traducción al inglés (sumala en contenido/ingles/terminos.txt): {t}")
+    return prefijar(d)
 
 
 # ---------- armado ----------
@@ -404,10 +619,35 @@ def main():
         "MUESTRAS": muestras, "RESIDENCIAS": residencias, "FOTOS": fotos, "OBRAS": obras, "CATS": cats,
         "STATEMENT": leer_parrafos("textos/statement"), "BIO": bio["bio"], "CV": leer_cv(), "PRENSA": leer_prensa(),
     }
-    js = "\n".join(f"const {k} = {json.dumps(v, ensure_ascii=False)};" for k, v in datos.items())
     plantilla = (SITIO / "plantilla.html").read_text(encoding="utf-8")
-    pagina = plantilla.replace("/*__DATOS__*/", js)
-    (SALIDA / "index.html").write_text(pagina, encoding="utf-8")
+    dominio_txt = (RAIZ / "CNAME").read_text().strip() if (RAIZ / "CNAME").exists() else ""
+    base = f"https://{dominio_txt}" if dominio_txt else ""
+
+    def pagina(datos_pag, lang):
+        extra = {"LANG": lang, "I18N": UI_EN if lang == "en" else {}}
+        js = "\n".join(f"const {k} = {json.dumps(v, ensure_ascii=False)};" for k, v in {**datos_pag, **extra}.items())
+        html = plantilla
+        cabeza = ""
+        if MOSTRAR_SELECTOR:
+            cabeza = (f'<link rel="alternate" hreflang="es" href="{base}/">\n'
+                      f'<link rel="alternate" hreflang="en" href="{base}/en/">')
+        elif lang == "en":
+            cabeza = '<meta name="robots" content="noindex">'
+        if lang == "en":
+            selector = '<div class="lang"><a href="../" hreflang="es" lang="es">ES</a><span aria-hidden="true">/</span><span aria-current="true">EN</span></div>'
+            corte = html.index("<script>")
+            estatico = html[:corte]
+            for a, b in ESTATICO_EN:
+                estatico = estatico.replace(a, b)
+            html = estatico + html[corte:]
+        else:
+            selector = ('<div class="lang"><span aria-current="true">ES</span><span aria-hidden="true">/</span><a href="en/" hreflang="en" lang="en">EN</a></div>'
+                        if MOSTRAR_SELECTOR else "")
+        return html.replace("<!--__CABEZA__-->", cabeza).replace("<!--__IDIOMA__-->", selector).replace("/*__DATOS__*/", js)
+
+    (SALIDA / "index.html").write_text(pagina(datos, "es"), encoding="utf-8")
+    (SALIDA / "en").mkdir(exist_ok=True)
+    (SALIDA / "en" / "index.html").write_text(pagina(datos_en(datos), "en"), encoding="utf-8")
 
     dominio = (RAIZ / "CNAME")
     if dominio.exists():

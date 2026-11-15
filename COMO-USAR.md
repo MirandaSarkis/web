@@ -124,3 +124,18 @@ Obras destacadas: Abrí una piedra; La danza; Roca madre; La creación del mundo
 
 Las obras destacadas son las cuatro que aparecen en el inicio: van los títulos tal como figuran
 en Obras, separados por punto y coma. La "Muestra más reciente" se elige sola (la del año más nuevo).
+
+## Versión en inglés
+
+La web tiene una versión en inglés en `mirandasarkis.com/en/`. Se arma sola a partir de la española;
+lo que no tenga traducción se muestra en español.
+
+- **Títulos** de muestras, obras y piezas: `contenido/ingles/titulos.txt`, una línea por título:
+  `Título en español = Translation in English`. En inglés se ve el título original y la traducción entre paréntesis.
+- **Técnicas, formatos y lugares**: `contenido/ingles/terminos.txt`, con el mismo formato.
+- **Textos largos**: un archivo con el mismo nombre terminado en `.en.txt`, al lado del original.
+  Por ejemplo `ficha.en.txt` junto a `ficha.txt`, `statement.en.txt`, `bio.en.txt`, `cv.en.txt`,
+  `contacto.en.txt`, `inicio.en.txt`. En `ficha.en.txt` va el texto en inglés debajo de una línea `---`;
+  arriba se pueden poner `Subtítulo:`, `Epígrafe:` y `Firma:` en inglés.
+
+Al cargar una obra o muestra nueva: sumar su título a `titulos.txt` y, si tiene texto, su `ficha.en.txt`.

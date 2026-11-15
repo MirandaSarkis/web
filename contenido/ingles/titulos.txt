@@ -1,0 +1,129 @@
+# Traducciones de títulos (muestras, obras y piezas de series).
+# Una por línea:   Título en español = Translation in English
+# En la versión en inglés se ve el título original y, al lado, la traducción entre paréntesis.
+# Si un título no está acá (o la traducción es igual al original), se muestra solo en español.
+# Los números romanos, "(detalle)", "(díptico)", etc. se agregan solos: alcanza con el título base.
+
+# --- Muestras ---
+Abrí una piedra = I Opened a Stone
+Hasta acá llegaste, susurra el viento = This Is as Far as You've Come, Whispers the Wind
+Sostener el fuego = Holding the Fire
+No sé por cuánto tiempo caminé con los ojos cerrados = I Don't Know How Long I Walked with My Eyes Closed
+Ayudame a sostener todo esto = Help Me Hold All This
+
+# --- Cerámica ---
+La danza = The Dance
+Lo que te compromete con el mundo = What Binds You to the World
+Núcleo = Core
+Nuestro amor nunca podrán sacarlo de raíz = They Will Never Uproot Our Love
+Pasajes = Passages
+Roca madre = Mother Rock
+Tres protectores = Three Protectors
+Volcán = Volcano
+¿Y ahora qué? = And Now What?
+Contenedor de la montaña = Container of the Mountain
+Visores para hormigas = Viewfinders for Ants
+Reminiscencias = Reminiscences
+Una piedra todo puede contener, una piedra nada puede contener = A Stone Can Hold Everything, a Stone Can Hold Nothing
+Sol naranja = Orange Sun
+Una rama y una piedra = A Branch and a Stone
+Tres = Three
+Surcos = Furrows
+Siempre = Always
+Protégeme = Protect Me
+Piedras = Stones
+Miré arriba y estaba el cielo = I Looked Up and There Was the Sky
+Hasta acá = This Far
+En el cauce del río = In the Riverbed
+El camino = The Path
+Arcilla = Clay
+Árbol caído = Fallen Tree
+Aquí te espero = I'll Wait for You Here
+Agua de río = River Water
+Tres maneras de sostenerte = Three Ways of Holding You
+Tiene sentido que parezca un pez, ya que dentro se oye el mar = It Makes Sense That It Looks Like a Fish, Since You Can Hear the Sea Inside
+La creación del mundo = The Creation of the World
+Punta de flecha, un amuleto para un amuleto = Arrowhead, an Amulet for an Amulet
+Mi corazón está lleno de micas = My Heart Is Full of Mica
+Este relato = This Story
+Dentro se escucha el mar = Inside, You Can Hear the Sea
+Arrastrar la tierra con los dedos = Dragging the Earth with My Fingers
+Piedras sueltas = Loose Stones
+Un pedazo de volcán = A Piece of Volcano
+Visor para paisajes = Viewfinder for Landscapes
+
+# --- Piedras sueltas ---
+Cadenas = Chains
+Caminos = Paths
+Círculo de piedras = Stone Circle
+Constelaciones = Constellations
+Hacia el centro = Toward the Center
+Huellas = Footprints
+No creo que el silencio realmente exista = I Don't Think Silence Really Exists
+Paisaje natural = Natural Landscape
+Sabes que te voy a amar siempre = You Know I Will Always Love You
+Talla = Carving
+Tristeza = Sadness
+Un corazón = A Heart
+Una rosa = A Rose
+Visor = Viewfinder
+
+# --- Dibujo ---
+Un verano en casa = A Summer at Home
+Amuletos = Amulets
+El cielo a lo alto = The Sky Up High
+El final = The End
+La pregunta = The Question
+Lo que permanece = What Remains
+Lo simple = The Simple
+Mi tierra = My Land
+Muro = Wall
+No puede ser = It Can't Be
+Paisaje en orden = Landscape in Order
+Quiero quedarme = I Want to Stay
+Seguir = To Go On
+Silencio = Silence
+Un pedazo de tierra = A Piece of Land
+Un relato = A Story
+
+Serie Verde = Green Series
+La flecha en la piedra = The Arrow in the Stone
+La flor crece para ser cortada = The Flower Grows to Be Cut
+Tus largas piernas supieron ser refugio para las piedras = Your Long Legs Were Once a Shelter for the Stones
+Escrito = Written
+
+Acción en la terraza (contención, transformación y entrega) = Action on the Terrace (Containment, Transformation and Offering)
+Acción en la terraza = Action on the Terrace
+
+Contemplación (y resistencia) = Contemplation (and Resistance)
+Alternancia = Alternation
+Esto es una trampa = This Is a Trap
+Ejercicio = Exercise
+Elementos en vínculo = Elements in Relation
+Ejercicios para encontrar el equilibrio = Exercises for Finding Balance
+Autorretrato o naturaleza muerta = Self-Portrait or Still Life
+Collar de piedras del monte = Necklace of Stones from the Hills
+Carretilla con piedras = Wheelbarrow with Stones
+Refugio = Shelter
+Ceremonia = Ceremony
+Equilibrio = Balance
+Suspensión = Suspension
+La suerte y el orden = Luck and Order
+Lenguaje reflejado = Mirrored Language
+Péndulo = Pendulum
+Sin título = Untitled
+Escena = Scene
+
+Serie blanco y negro = Black and White Series
+Desierto = Desert
+Recorte de montañas = Mountain Cutout
+Sobre los cerros = Over the Hills
+El espejo, el reflejo = The Mirror, the Reflection
+Habitantes = Inhabitants
+Paisaje rocoso = Rocky Landscape
+Con tensión = With Tension
+Distanciamiento social preventivo = Preventive Social Distancing
+El reflejo de Artaud = Artaud's Reflection
+Iniciación = Initiation
+Sanación = Healing
+Simbiosis = Symbiosis

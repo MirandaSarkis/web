@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Miranda Sarkis</title>
+<!--__CABEZA__-->
 <link rel="icon" href="/favicon.ico" sizes="48x48">
 <link rel="icon" type="image/png" href="/icono-192.png" sizes="192x192">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
@@ -56,6 +57,13 @@ nav a{
 }
 nav a:hover{ color:var(--fg); }
 nav a[aria-current="page"]{ color:var(--fg); border-bottom-color:var(--fg); }
+.head-r{ display:flex; flex-wrap:wrap; align-items:baseline; gap:8px 28px; }
+.lang{ display:flex; gap:6px; font-family:var(--font-mono); font-size:12px; letter-spacing:.04em; color:var(--muted); }
+.lang a{ color:var(--muted); text-decoration:none; }
+.lang a:hover{ color:var(--fg); }
+.lang [aria-current]{ color:var(--fg); }
+.tr{ font-style:normal; color:var(--muted); }
+h1 .tr{ display:block; font-size:.55em; margin-top:6px; }
 
 /* Inicio */
 .home{ display:flex; flex-direction:column; gap:20px; }
@@ -249,6 +257,7 @@ footer{
 <div class="wrap">
   <header>
     <a class="name" href="#">Miranda Sarkis</a>
+    <div class="head-r">
     <nav aria-label="Secciones">
       <ul>
         <li><a href="#muestras">Muestras</a></li>
@@ -260,6 +269,8 @@ footer{
         <li><a href="#contacto">Contacto</a></li>
       </ul>
     </nav>
+    <!--__IDIOMA__-->
+    </div>
   </header>
 
   <main id="view"></main>
@@ -287,6 +298,8 @@ footer{
 
 /* ---------- Render ---------- */
 
+const t = s => I18N[s] || s;
+const conTr = x => [x.titulo, x.tr ? el("span", {class:"tr", lang:"en"}, " " + (/[()]/.test(x.tr) ? "[" + x.tr + "]" : "(" + x.tr + ")")) : null];
 const view = document.getElementById("view");
 const navLinks = document.querySelectorAll("nav a");
 
@@ -306,7 +319,7 @@ function home(){
   const ini = SITIO.inicio, p = ini.portada, ult = MUESTRAS[0];
   let dest = (ini.destacadas || []).map(s => OBRAS.find(o => o.id === "obra-" + s)).filter(Boolean);
   if (!dest.length) dest = OBRAS.slice(0, 4);
-  const pie = [ini.pie, ini.registro ? "Registro: " + ini.registro : ""].filter(Boolean).join(" · ");
+  const pie = [ini.pie, ini.registro ? t("Registro: ") + ini.registro : ""].filter(Boolean).join(" · ");
   return el("section", {class:"home"},
     p ? el("figure", {class:"hero"},
       el("img", {src:p[0], alt:ini.alt, width:String(p[1]), height:String(p[2])}),
@@ -314,19 +327,19 @@ function home(){
     ) : null,
     ini.intro ? el("p", {class:"intro"}, ini.intro) : null,
     ult ? el("div", {class:"home-sec"},
-      el("div", {class:"sec-head"}, el("h2", null, "Muestra más reciente"), el("a", {href:"#muestras"}, "Todas las muestras →")),
+      el("div", {class:"sec-head"}, el("h2", null, t("Muestra más reciente")), el("a", {href:"#muestras"}, t("Todas las muestras →"))),
       el("a", {class:"latest", href:"#" + ult.id},
         el("span", {class:"im"}, ult.cover ? el("img", {src:ult.cover, alt:"", loading:"lazy", decoding:"async"}) : null),
         el("span", {class:"tx"},
           el("span", {class:"note"}, ult.anio),
-          el("span", {class:"ti"}, ult.titulo),
+          el("span", {class:"ti"}, conTr(ult)),
           el("span", {class:"pl"}, ult.lugar),
-          el("span", {class:"go"}, "Ver la muestra →")
+          el("span", {class:"go"}, t("Ver la muestra →"))
         )
       )
     ) : null,
     dest.length ? el("div", {class:"home-sec"},
-      el("div", {class:"sec-head"}, el("h2", null, "Obras"), el("a", {href:"#obras"}, "Todas las obras →")),
+      el("div", {class:"sec-head"}, el("h2", null, t("Obras")), el("a", {href:"#obras"}, t("Todas las obras →"))),
       el("ul", {class:"works"}, dest.map(tarjetaObra))
     ) : null
   );
@@ -336,7 +349,7 @@ function filaMuestra(m){
   return el("li", null, el("a", {href:"#" + m.id},
     el("span", {class:"im"}, m.cover ? el("img", {src:m.cover, alt:"", loading:"lazy", decoding:"async"}) : null),
     el("span", {class:"y"}, m.anio),
-    el("div", null, el("p", {class:"ti"}, m.titulo), el("p", {class:"pl"}, m.lugar)),
+    el("div", null, el("p", {class:"ti"}, conTr(m)), el("p", {class:"pl"}, m.lugar)),
     el("span", {class:"go", "aria-hidden":"true"}, "→")
   ));
 }
@@ -344,16 +357,16 @@ function filaMuestra(m){
 function tarjetaObra(o){
   return el("li", null, el("a", {href:"#" + o.id},
     el("span", {class:"thumb"}, el("img", {src:o.cover, alt:o.titulo, loading:"lazy", decoding:"async"})),
-    el("span", {class:"wt"}, o.titulo),
+    el("span", {class:"wt"}, conTr(o)),
     el("span", {class:"wm"}, CATS[o.cat] + " · " + o.anio)
   ));
 }
 
 function muestras(){
   return el("section", {class:"page"},
-    el("h1", null, "Muestras"),
+    el("h1", null, t("Muestras")),
     el("div", {class:"block"},
-      el("h2", null, "Individuales"),
+      el("h2", null, t("Individuales")),
       el("ul", {class:"shows"}, MUESTRAS.map(filaMuestra))
     )
   );
@@ -361,7 +374,7 @@ function muestras(){
 
 function residencias(){
   return el("section", {class:"page"},
-    el("h1", null, "Residencias"),
+    el("h1", null, t("Residencias")),
     el("div", {class:"block"},
       el("ul", {class:"shows"}, RESIDENCIAS.map(filaMuestra))
     )
@@ -369,10 +382,10 @@ function residencias(){
 }
 
 function muestra(m, volver){
-  volver = volver || ["muestras", "Muestras"];
+  volver = volver || ["muestras", t("Muestras")];
   const facts = el("dl", {class:"facts"},
-    el("dt", null, "Año"), el("dd", null, m.anio),
-    el("dt", null, "Lugar"), el("dd", null, m.lugar),
+    el("dt", null, t("Año")), el("dd", null, m.anio),
+    el("dt", null, t("Lugar")), el("dd", null, m.lugar),
     m.ficha.map(([k, v]) => [el("dt", null, k), el("dd", null, v)])
   );
   let prose = null;
@@ -387,7 +400,7 @@ function muestra(m, volver){
   }
   return el("section", {class:"page"},
     el("a", {class:"back", href:"#" + volver[0]}, "← " + volver[1]),
-    el("div", {class:"page-head"}, el("h1", {class:"ti"}, m.titulo)),
+    el("div", {class:"page-head"}, el("h1", {class:"ti"}, conTr(m))),
     facts,
     volver[0] === "residencias" ? prose : null,
     videos(m),
@@ -406,16 +419,16 @@ function videos(m){
     let src = null;
     let k = u.match(/(?:youtu\.be\/|v=|shorts\/)([\w-]{6,})/); if (k) src = "https://www.youtube-nocookie.com/embed/" + k[1];
     k = u.match(/vimeo\.com\/(?:video\/)?(\d+)/); if (k) src = "https://player.vimeo.com/video/" + k[1];
-    if (src) vs.push(el("figure", {class:"video embed"}, el("iframe", {src, title:"Video de " + m.titulo, allow:"fullscreen; picture-in-picture", allowfullscreen:"", loading:"lazy"})));
+    if (src) vs.push(el("figure", {class:"video embed"}, el("iframe", {src, title:t("Video de ") + m.titulo, allow:"fullscreen; picture-in-picture", allowfullscreen:"", loading:"lazy"})));
   }
   return vs.length ? el("div", {class:"videos"}, vs) : null;
 }
 
 function gallery(m){
   const list = FOTOS[m.id] || [];
-  if (!list.length) return el("div", {class:"photos"}, "Fotos de sala en preparación");
-  const alt = i => m.titulo + ", vista " + (i + 1) + " de " + list.length;
-  const fig = (f, i, cls) => el("button", {class:"shot " + (cls || ""), type:"button", "aria-label":"Ampliar " + alt(i), "data-i":String(i)},
+  if (!list.length) return el("div", {class:"photos"}, t("Fotos de sala en preparación"));
+  const alt = i => m.titulo + t(", vista ") + (i + 1) + t(" de ") + list.length;
+  const fig = (f, i, cls) => el("button", {class:"shot " + (cls || ""), type:"button", "aria-label":t("Ampliar ") + alt(i), "data-i":String(i)},
     el("img", {src:f[0], width:String(f[1]), height:String(f[2]), alt:alt(i), loading: i < 2 ? "eager" : "lazy", decoding:"async"})
   );
   const g = el("div", {class:"gallery"},
@@ -435,7 +448,7 @@ const boxCount = box.querySelector(".count");
 let boxList = [], boxI = 0, boxTitle = "", boxReturn = null;
 function showBox(){
   const f = boxList[boxI];
-  boxImg.src = f[0]; boxImg.alt = boxTitle + ", vista " + (boxI + 1) + " de " + boxList.length;
+  boxImg.src = f[0]; boxImg.alt = boxTitle + t(", vista ") + (boxI + 1) + t(" de ") + boxList.length;
   boxCount.textContent = (boxI + 1) + " / " + boxList.length + (f[3] ? "  ·  " + f[3] : "");
   if (f[3]) boxImg.alt = f[3];
 }
@@ -462,15 +475,15 @@ document.addEventListener("keydown", e => {
 
 function textos(){
   return el("section", {class:"page"},
-    el("h1", null, "Textos"),
+    el("h1", null, t("Textos")),
     el("div", {class:"block"},
       el("h2", null, "Statement"),
       el("div", {class:"prose"}, paras(STATEMENT))
     ),
     el("div", {class:"block"},
-      el("h2", null, "Textos de muestras"),
+      el("h2", null, t("Textos de muestras")),
       el("ul", {class:"links"}, MUESTRAS.filter(m => m.firma).map(m =>
-        el("li", null, el("a", {href:"#" + m.id}, m.firma.split(",")[0] + ", sobre "), el("em", null, m.titulo), " (" + m.anio + ")")
+        el("li", null, el("a", {href:"#" + m.id}, m.firma.split(",")[0] + t(", sobre ")), el("em", null, m.titulo), m.tr ? " (" + m.tr + ")" : "", " (" + m.anio + ")")
       ))
     )
   );
@@ -478,7 +491,7 @@ function textos(){
 
 function prensa(){
   return el("section", {class:"page"},
-    el("h1", null, "Prensa"),
+    el("h1", null, t("Prensa")),
     el("ul", {class:"press"}, PRENSA.map(([med, hl, url]) =>
       el("li", null, el("a", {href:url, target:"_blank", rel:"noopener"},
         el("span", {class:"med"}, med),
@@ -494,7 +507,7 @@ function bio(){
     el("h1", null, "Bio / CV"),
     el("div", {class:"bio-top"},
       SITIO.retrato ? el("figure", {class:"portrait"},
-        el("img", {src:SITIO.retrato[0], width:String(SITIO.retrato[1]), height:String(SITIO.retrato[2]), alt:"Retrato de Miranda Sarkis"}),
+        el("img", {src:SITIO.retrato[0], width:String(SITIO.retrato[1]), height:String(SITIO.retrato[2]), alt:t("Retrato de Miranda Sarkis")}),
         SITIO.pie_retrato ? el("figcaption", {class:"note"}, SITIO.pie_retrato) : null
       ) : null,
       el("div", {class:"block"},
@@ -512,7 +525,7 @@ function bio(){
 function pendiente(titulo, desc){
   return el("section", {class:"page"},
     el("div", {class:"page-head"},
-      el("span", {class:"label"}, "En preparación"),
+      el("span", {class:"label"}, t("En preparación")),
       el("h1", null, titulo),
       el("p", {class:"note"}, desc)
     )
@@ -525,16 +538,16 @@ function obrasIndex(cat){
   const anios = [...new Set(list.map(anioDe))].sort((a, b) => b - a);
   const tab = (href, label, on) => el("a", {class:"tab", href, ...(on ? {"aria-current":"true"} : {})}, label);
   return el("section", {class:"page"},
-    el("h1", null, "Obras"),
-    el("nav", {class:"tabs", "aria-label":"Filtrar por técnica"},
-      tab("#obras", "Todas", !cat),
+    el("h1", null, t("Obras")),
+    el("nav", {class:"tabs", "aria-label":t("Filtrar por técnica")},
+      tab("#obras", t("Todas"), !cat),
       Object.keys(CATS).map(k => tab("#obras-" + k, CATS[k], cat === k))
     ),
     el("div", null, anios.map(a => {
       const delAnio = list.filter(o => anioDe(o) === a);
       return el("section", {class:"year"},
-        el("div", {class:"year-head"}, el("h2", null, a ? String(a) : "Sin fecha"),
-          el("span", {class:"note"}, delAnio.length + (delAnio.length === 1 ? " obra" : " obras"))),
+        el("div", {class:"year-head"}, el("h2", null, a ? String(a) : t("Sin fecha")),
+          el("span", {class:"note"}, delAnio.length + t(delAnio.length === 1 ? " obra" : " obras"))),
         el("ul", {class:"works"}, delAnio.map(tarjetaObra))
       );
     }))
@@ -544,7 +557,7 @@ function obrasIndex(cat){
 function obra(o){
   const g = el("div", {class:"cols works-g"}, o.items.map((f, i) =>
     el("figure", {class:"piece"},
-      el("button", {class:"shot", type:"button", "aria-label":"Ampliar " + f[3], "data-i":String(i)},
+      el("button", {class:"shot", type:"button", "aria-label":t("Ampliar ") + f[3], "data-i":String(i)},
         el("img", {src:f[0], width:String(f[1]), height:String(f[2]), alt:f[3], loading: i < 4 ? "eager" : "lazy", decoding:"async"})
       ),
       f[5] ? el("figcaption", null, f[3].split(" · ")[0]) : null
@@ -555,13 +568,13 @@ function obra(o){
   });
   return el("section", {class:"page"},
     el("a", {class:"back", href:"#obras-" + o.cat}, "← " + CATS[o.cat]),
-    el("div", {class:"page-head"}, el("h1", {class:"ti"}, o.titulo)),
+    el("div", {class:"page-head"}, el("h1", {class:"ti"}, conTr(o))),
     el("dl", {class:"facts"},
-      o.nota ? [el("dt", null, "Formato"), el("dd", null, o.nota)] : null,
-      el("dt", null, "Técnica"), el("dd", null, o.tec),
-      el("dt", null, "Medidas"), el("dd", null, o.med),
-      el("dt", null, "Año"), el("dd", null, o.anio),
-      o.registro ? [el("dt", null, "Registro"), el("dd", null, o.registro)] : null
+      o.nota ? [el("dt", null, t("Formato")), el("dd", null, o.nota)] : null,
+      el("dt", null, t("Técnica")), el("dd", null, o.tec),
+      el("dt", null, t("Medidas")), el("dd", null, o.med),
+      el("dt", null, t("Año")), el("dd", null, o.anio),
+      o.registro ? [el("dt", null, t("Registro")), el("dd", null, o.registro)] : null
     ),
     o.texto ? el("div", {class:"prose"}, paras(o.texto)) : null,
     g
@@ -586,7 +599,7 @@ function enlazar(t){
 
 function contacto(){
   return el("section", {class:"page"},
-    el("h1", null, "Contacto"),
+    el("h1", null, t("Contacto")),
     SITIO.contacto.map(b => el("div", {class:"block"},
       el("h2", null, b.titulo),
       b.lineas.length === 1
@@ -609,12 +622,15 @@ function render(){
   const r = RESIDENCIAS.find(x => x.id === key);
   const o = OBRAS.find(x => x.id === key);
   view.innerHTML = "";
-  view.append(m ? muestra(m) : r ? muestra(r, ["residencias", "Residencias"]) : o ? obra(o) : ROUTES[key] ? ROUTES[key]() : home());
+  view.append(m ? muestra(m) : r ? muestra(r, ["residencias", t("Residencias")]) : o ? obra(o) : ROUTES[key] ? ROUTES[key]() : home());
   const navKey = m ? "muestras" : r ? "residencias" : (o || key.startsWith("obras")) ? "obras" : key;
   navLinks.forEach(a => a.toggleAttribute("aria-current", a.getAttribute("href") === "#" + navKey));
   navLinks.forEach(a => { if (a.hasAttribute("aria-current")) a.setAttribute("aria-current", "page"); });
   window.scrollTo(0, 0);
 }
+document.querySelectorAll(".lang a").forEach(a => a.addEventListener("click", e => {
+  e.preventDefault(); location.href = a.getAttribute("href") + location.hash;
+}));
 window.addEventListener("hashchange", render);
 render();
 </script>
