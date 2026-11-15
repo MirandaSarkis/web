@@ -13,7 +13,7 @@ Ayudame a sostener todo esto = Help Me Hold All This
 
 # --- Cerámica ---
 La danza = The Dance
-Lo que te compromete con el mundo = What Binds You to the World
+Lo que te compromete con el mundo = What Commits You to the World
 Núcleo = Core
 Nuestro amor nunca podrán sacarlo de raíz = They Will Never Uproot Our Love
 Pasajes = Passages

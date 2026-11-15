@@ -399,7 +399,7 @@ def leer_contacto(nombre="contacto"):
 # Lo que no tiene traducción se muestra en español.
 
 ORIGEN = {}          # id de muestra/obra -> carpeta de contenido
-MOSTRAR_SELECTOR = False   # True: el sitio en español muestra el selector ES / EN y Google puede indexar /en/
+MOSTRAR_SELECTOR = True    # True: el sitio en español muestra el selector ES / EN y Google puede indexar /en/
 
 UI_EN = {
     "Muestras": "Exhibitions", "Obras": "Works", "Residencias": "Residencies", "Textos": "Texts", "Prensa": "Press",
